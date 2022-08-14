@@ -30,7 +30,6 @@ services:
       options:
             max-size: "5m"
       tty: true
-      stdin_open: true
   bot2:
     image: alex007d/bot_pg:latest
     environment:
@@ -47,7 +46,6 @@ services:
       options:
             max-size: "5m"
       tty: true
-      stdin_open: true
   
 
   pgadmin:
