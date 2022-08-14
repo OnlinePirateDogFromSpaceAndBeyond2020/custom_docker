@@ -1,0 +1,67 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password
+      - POSTGRES_USER=tradebot
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - db-data:/var/lib/postgresql/data/pgdata
+    secrets:
+      - postgresql_password
+
+  bot1:
+    image: alex007d/bot_pg:latest
+    environment:
+      - CONFIG_FILE_NAME=conf_btcusd_arb.yml
+      - CONFIG_PASSWORD=123456789
+    volumes:
+      - "./bots_configs/master_files/hummingbot_conf:/conf/"
+      - "./bots_configs/master_files/hummingbot_logs:/logs/"
+      - "./bots_configs/master_files/hummingbot_data:/data/"
+      - "./bots_configs/master_files/hummingbot_pmm_scripts:/pmm_scripts/"
+      - "./bots_configs/master_files/hummingbot_scripts:/scripts/"
+    logging:
+      driver: "json-file"
+      options:
+            max-size: "5m"
+      tty: true
+      stdin_open: true
+  bot2:
+    image: alex007d/bot_pg:latest
+    environment:
+      - CONFIG_FILE_NAME=conf_btcusd_arb.yml
+      - CONFIG_PASSWORD=123456789
+    volumes:
+      - "./bots_configs/staging_files/hummingbot_conf:/conf/"
+      - "./bots_configs/staging_files_files/hummingbot_logs:/logs/"
+      - "./bots_configs/staging_files_files/hummingbot_data:/data/"
+      - "./bots_configs/staging_files_files/hummingbot_pmm_scripts:/pmm_scripts/"
+      - "./bots_configs/staging_files_files/hummingbot_scripts:/scripts/"
+    logging:
+      driver: "json-file"
+      options:
+            max-size: "5m"
+      tty: true
+      stdin_open: true
+  
+
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+    - "5050:80"
+volumes:
+  db-data:
+  
+secrets:
+    postgresql_password:
+      file: postgresql_password
