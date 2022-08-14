@@ -29,7 +29,7 @@ services:
       driver: "json-file"
       options:
             max-size: "5m"
-      tty: true
+
   bot2:
     image: alex007d/bot_pg:latest
     environment:
@@ -45,7 +45,7 @@ services:
       driver: "json-file"
       options:
             max-size: "5m"
-      tty: true
+
   
 
   pgadmin:
